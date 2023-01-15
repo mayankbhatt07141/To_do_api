@@ -1,0 +1,71 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/lists":
+    get:
+      summary: list All to-do item list
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properites:
+                    id:
+                      type: integer
+                    description:
+                      type: string
+    post:
+      summary: create list
+      responses:
+        '200':
+          description: successful
+  "/lists/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show list
+      responses:
+        '200':
+          description: successful
+    patch:
+      summary: update list
+      responses:
+        '200':
+          description: successful
+    put:
+      summary: update list
+      responses:
+        '200':
+          description: successful
+    delete:
+      summary: delete list
+      responses:
+        '200':
+          description: successful
+  "/":
+    get:
+      summary: list lists
+      responses:
+        '200':
+          description: successful
+servers:
+- url: http://localhost:3000
+  variables:
+    defaultHost:
+      default: http://localhost:3000
+- url: http://localhost:3000
+  variables:
+    defaultHost:
+      default: http://localhost:3000
