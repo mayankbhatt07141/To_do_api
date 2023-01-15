@@ -2,13 +2,9 @@ class ListsController < ApplicationController
 
   def index
     @todo = List.all
-    # debugger
-   
     limit, page = (params[:per_page] || 10).to_i, (params[:page] || 0).to_i
     @todo = @todo.offset(limit * page ).limit(limit)
     @todo = @todo.reverse()
-    
-    # puts @todo
     render json: { list: @todo }
   end
 
@@ -42,7 +38,6 @@ class ListsController < ApplicationController
   def destroy
     @todo = List.find(params[:id])
     @todo.destroy
-    # return @todo
   end
 
   private
