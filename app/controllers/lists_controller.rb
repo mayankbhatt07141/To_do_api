@@ -1,9 +1,10 @@
 class ListsController < ApplicationController
   before_action :authorized
-  def index
-    user = User.find_by(id: params[:user_id])
+  before_action :find_user
+  before_action :find_todo, only: [:destroy, :update]
 
-    @todo = user.list
+  def index
+    @todo = @user.list
     limit, page = (params[:per_page] || 10).to_i, (params[:page] || 0).to_i
     @todo = @todo.offset(limit * page ).limit(limit)
     @todo = @todo.reverse()
@@ -11,9 +12,7 @@ class ListsController < ApplicationController
   end
 
   def create
-    user = User.find_by(id: params[:user_id])
-    @todo = user.list.create(todo_params)
-
+    todo = @user.list.create(todo_params)
     render json: { list: @todo, message:"created" }
   end
 
@@ -35,17 +34,29 @@ class ListsController < ApplicationController
     # else
     #   render json: { msg: "no content found" }, status: 204
     # end
+    # debugger
+    if @todo.update(todo_params)
+      render json: { list: @todo, message:"updated" }
+    else
+      render json: { error: @todo, message: "something went wrong" }
+    end
+    # render json: { list: @todo, message:"created" }
   end
 
   def destroy
-    # @todo = List.find(params[:id])
-    # @todo.destroy
+    @todo.destroy
   end
 
   private
 
+  def find_user
+    @user = User.find_by(id: params[:user_id])
+  end
+  
+  def find_todo
+    @todo = @user.list.find_by(id: params[:id])
+  end
   def todo_params
-    puts params[:todo]
     params.require(:todo).permit(:id, :description, :completed)
   end
 end

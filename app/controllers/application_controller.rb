@@ -1,14 +1,16 @@
 class ApplicationController < ActionController::API
     before_action :authorized
 
-    def encode_token(payload)
+    def encode_token(payload, exp = 7.hours.from_now)
+      payload[:exp] = exp.to_i
       JWT.encode(payload, Rails.application.credentials.config[:secret_key_base])
     end
 
     def auth_header
       # { Authorization: 'Bearer <token>' }
       request.headers['Authorization']
-      end
+    end
+
     def decoded_token
       if auth_header
         token = auth_header.split(' ')[1]
@@ -33,6 +35,6 @@ class ApplicationController < ActionController::API
     end
 
     def authorized
-      render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
+      render json: { error: 'Please log in' }, status: :unauthorized unless logged_in?
     end
 end
