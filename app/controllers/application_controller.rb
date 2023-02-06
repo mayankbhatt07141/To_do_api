@@ -16,7 +16,7 @@ class ApplicationController < ActionController::API
         token = auth_header.split(' ')[1]
         # header: { 'Authorization': 'Bearer <token>' }
       begin
-        JWT.decode(token, Rails.application.credentials.config[:secret_key_base], true, algorithm: 'HS256')
+        JWT.decode(token, Rails.application.credentials.config[:secret_key_base], false)
         rescue JWT::DecodeError
           nil
         end
